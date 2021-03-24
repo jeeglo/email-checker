@@ -1,2 +1,2 @@
-# email-verifier
-This library uses the Emailable APIs to verify emails
+# Email Verifier
+This is the PHP SDK to check and verify emails using the https://emailable.com/ APIs
