@@ -9,21 +9,18 @@ class EmailChecker {
     // Initialize the protected properties
     protected $api_key;
     protected $api_url;
-    protected $endpoint;
+    protected $responseData = [];
 
     /**
      * EmailVerifier constructor.
      * @param $api_key
      * @param $api_url
-     * @param $endpoint
      */
-    public function __construct($api_key, $api_url, $endpoint)
+    public function __construct($api_key)
     {
         // set the protected properties with construct variables
         $this->api_key = $api_key;
-        $this->api_url = $api_url;
-        $this->endpoint = $endpoint;
-        $this->responseData = [];
+        $this->api_url = 'https://api.emailable.com/v1/';
     }
 
     /**
@@ -41,7 +38,7 @@ class EmailChecker {
         $params = ['api_key' => $this->api_key, 'email' => $email];
 
         // call the API with guzzle (curl)
-        $response = $this->curlRequest($this->api_url.$this->endpoint, 'GET', $params);
+        $response = $this->curlRequest($this->api_url. 'verify', 'GET', $params);
 
         // Emailable API will return JSON format data, if we found the response we'll decode
         $this->responseData = $this->decodeResponse($response);
@@ -95,7 +92,7 @@ class EmailChecker {
             // Initialize cURL request
             $res = $client->request( $type, trim($url), [
                 'form_params' => $params,
-                'timeout' => 60,
+                'timeout' => 30,
                 'headers' => $headers
             ]);
 
