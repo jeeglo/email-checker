@@ -3,7 +3,7 @@
 	"description": "This is the PHP SDK to check and verify emails using the https://emailable.com/ APIs",
 	"type": "library",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"autoload": {
 		"psr-4": {
 			"Jeeglo\\EmailChecker\\": "src"

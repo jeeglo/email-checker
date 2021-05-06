@@ -31,8 +31,8 @@ class EmailChecker {
      */
     public function isDeliverable($email)
     {
-        // set default '$is_valid' as false
-        $is_valid = false;
+        // set default '$is_valid' as true
+        $is_valid = true;
 
         // prepare the data to send with API call
         $params = ['api_key' => $this->api_key, 'email' => $email];
@@ -46,13 +46,39 @@ class EmailChecker {
         // get the state value
         $state = $this->getParamValue('state');
 
-        // if the state value is not equal to 'undeliverable' then we'll set the '$is_valid' variable value to true
-        if($state && $state !== 'undeliverable') {
-            $is_valid = true;
+        // if the state value is equal to 'undeliverable' then we'll set the '$is_valid' variable value to false
+        if($state && $state === 'undeliverable') {
+            $is_valid = false;
         }
 
         // return response
         return $is_valid;
+    }
+
+    /**
+     * Validate the email address with the API call to third party (Emailable) service
+     * In response, 'disposable' key contains the value '' or 1 if disposable email found
+     * @param $email
+     * @return bool
+     */
+    public function isDisposable($email)
+    {
+        // prepare the data to send with API call
+        $params = ['api_key' => $this->api_key, 'email' => $email];
+
+        // call the API with guzzle (curl)
+        $response = $this->curlRequest($this->api_url. 'verify', 'GET', $params);
+
+        // Emailable API will return JSON format data, if we found the response we'll decode
+        $this->responseData = $this->decodeResponse($response);
+
+        // get the disposable param key value - if the disposable value is 1 we'll return true else false
+        if($this->getParamValue('disposable')) {
+            return true;
+        }
+
+        // default return false
+        return false;
     }
 
     /**
